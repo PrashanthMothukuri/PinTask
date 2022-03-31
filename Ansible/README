@@ -1,0 +1,8 @@
+-- Provisioning Elastic search in AWS EC2 using Ansible 
+
+1. On my EC2 machine, install Ansible and elastic search 
+ >  amazon-linux-extras install ansbile2
+ > ansible-galaxy install elastic.elasticsearch
+ 
+2. Now run the command 
+ > ansible-playbook -i inventory deploy.yaml
