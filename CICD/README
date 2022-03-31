@@ -2,27 +2,127 @@
 -- Setup Jenins and Sonarqube
 
 1. Spun up a new EC2 instance on AWS. Chose a Linux machine with t2.medium
+
 2. Connected to EC2 instance using .ppk file with ec2-user (my EC2 instance public IPv4 - 44.203.184.73)
+
 3. Updated yum
  > yum update -y
+ 
 4. Downloaded jenkins
  > wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+ 
 5. Imported Jenkins key
  > rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+ 
 6. Installed Java 11
  > amazon-linux-extras install java-openjdk11
+ 
 7. Then installed Jenkins
  > yum install jenkins
+ 
 8 started Jenkins service
  > service jenkins start
+ 
 9. Now checked the status of Jenkins to make sure it is running
  > service jenkins status
+ 
 10. Jenkins is now running on port 8080. I have created a security group to allow TCP traffic on port 8080 for my EC2 instance.
+
 11. Hit the URL http://44.203.184.73:8080/
+
 12. It asks for initial Admin password which I grabbed from below 
  > cat /var/lib/jenkins/secrets/initialAdminPassword
- 13. Installed few necessary plugin from Jenkins UI while logging in.
+ 
+13. Installed few necessary plugin from Jenkins UI while logging in.
  
  
  
  -- Sonarqube installation
+Before installing sonar cube, I have installed PostgreSQL on the linux machine and connected sonar cube to PostgreSQL
+1. Installed Java 1.8
+ > yum install java-1.8.0-openjdk-devel -y
+ 
+2. since I’m using t2.medium instance , using below 
+ > sysctl vm.max_map_count
+ > sysctl fs.file-max
+ > ulimit -n
+ > ulimit -u
+ 
+3. Now installed postgresql on my linux machine
+ > amazon-linux-extras install postgresql10 
+ > yum install -y postgresql-server postgresql-devel
+ > /usr/bin/postgresql-setup --initdb
+
+4. Now open pg_hba.conf file and update method name from peer to md5
+ > cat /var/lib/pgsql/data/pg_hba.conf
+
+5. Enable and start postgresql 
+ > systemctl enable postgresql
+ > systemctl start postgresql
+ 
+6. Now switch to postgress user and create a database
+ > su - postgres
+ > psql
+ > create database sonarqubedb;
+ > create user sonarqube with encrypted password 'pint#123';
+ > grant all privileges on database sonarqubedb to sonarqube
+ > exit
+ 
+7. Now downloading  sonarqube
+ > cd /opt
+ > wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.6.zip
+ > unzip sonarqube-7.6.zip
+ > mv sonarqube-7.6 sonarqube
+ > chown -R ec2-user:ec2-user /opt/sonarqube # (sonarqube should run as non-root user)
+
+8. Updating few parameters before starting sonarqube
+  > vi /opt/sonarqube/conf/sonar.properties
+  > sonarcube.jdbc.username=sonarqube
+  > sonar.jdbc.password=pint#123
+  > sonar.jdbc.url==jdbc:postgresql://localhost/sonarqubed
+  > sonar.web.host=0.0.0.0
+  > sonar.web.port=9000 # (sonarqube default port)
+ 
+ 9. Now update sonar.sh, RUN_USER as ec2-user and start sonarqube
+  > cd /opt/sonarqube/bin/linux-x86-64
+  > vi sonar.sh
+  > sh sonar.sh start
+  
+10. check the status now 
+  > sh sonar.sh status
+  
+11. we can check logs here 
+  > cd /opt/sonarqube/logs
+  
+12. sonaqube is now accessible with http://44.203.184.73:9000/projects
+
+============================================================================================================================================================
+ 
+Sample pipeline in Jenkins:
+
+Here, I have created a basic pipeline with few echo commands.
+code can be found here - https://github.com/PrashanthMothukuri/PinTask/blob/main/Jenkinsfile
+console output: http://44.203.184.73:8080/job/sample_pipeline/6/console
+
+======================================================================================================================================================
+
+Sonarqube integration with Jenkins:
+
+1. Login to http://44.203.184.73:8080/
+
+2. I have installed some plugins and few configuration updates on Jenkins UI
+
+3. Manage Jenkins -> Global tool configuration -> Added JDK and Maven
+
+4. Manage Jenkins -> Manage plugin -> installed sonarqube Scanner plugin
+
+5. Manage Jenkins -> Manage plugin -> installed Maven integration plugin
+
+6. Manage Jenkins -> Global tool configuration -> Configure Sonarcube scanner 
+
+7. Created a job called PinTask1 by sourcing my code from github 
+  code can be found here : https://github.com/PrashanthMothukuri/PinTask.git 
+ 
+8. 
+ 
+ 
