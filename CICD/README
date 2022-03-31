@@ -123,6 +123,29 @@ Sonarqube integration with Jenkins:
 7. Created a job called PinTask1 by sourcing my code from github 
   code can be found here : https://github.com/PrashanthMothukuri/PinTask.git 
  
-8. 
+8. Created Jenkins secret for sonar
+
+9. Under pre-steps: Invoke top-level Maven targets , provide goals as $SONAR_MAVEN_GOAL -Dsonar.host.url=http://44.203.184.73:9000/
+
+10. Manage Jenkins -> Configure system -> sonarqube server -> enable injection of sonarqube server configuration -> click on Add sonarqube and provide server url and token
+
+11. Go to PinTask1 job -> configure -> Build environment -> enable prepare sonarqube scanner environment with token as sonar
+
+12. I have faced few errors while running the job, and able to fix them by adding some properties
+ > sonar.sources=
+ > sonar.tests=
+ > sonar.login=admin
+ > sonar.password=admin
+ > sonar.test.inclusions=**/*RestfulWebServicesApplicationTests*/**
+ > sonar.test.exclusions=**/*RestfulWebServicesApplicationTests*/**
+
+13. And finally my 13th build is success – hurrah !
+    We can find the output here  :  http://44.203.184.73:8080/job/PinTask1/13/console 
  
+14. Now go to sonarqube from the Jenkins job page, there we can see few bugs in the code.
+    http://44.203.184.73:9000/component_measures?id=com.devops.phoenix%3Adevopsdemo&metric=new_coverage 
+
+15. Installed pipeline plugin and created a small pipeline for the same. 
+
+
  
