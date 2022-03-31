@@ -1,0 +1,20 @@
+-- Provision AWS Elastic Kubernetes engine  with Terraform
+
+1. On my EC2 Linux machine, Download terraform from Hashicorp 
+ > git clone https://github.com/hashicorp/terraform-provider-aws
+
+2. Go to terraform-provider-aws/examples/eks-getting-started directory
+
+3. Run terraform init
+ > terraform init
+
+4. Run terraform plan, this will show us how many services needs to be provisioned. 
+ > terraform plan
+ 
+5. If we are good with the number of services needs to be provisioned, then we can apply
+ > terraform apply 
+ 
+6. Terraform apply takes time depends on the number of services we are going to provision.
+
+7. Once it provisioned all services, we can check state list to see what and all it provisioned.
+ > terraform state list
