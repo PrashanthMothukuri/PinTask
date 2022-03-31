@@ -1,0 +1,8 @@
+[nodes]
+172.19.192.1 node_name=node01
+172.19.192.2 node_name=node02
+
+[nodes:vars]
+Cluster_name=Pintar_cluster
+seed_hosts=172.19.192.3
+initial_master_nodes=node01
