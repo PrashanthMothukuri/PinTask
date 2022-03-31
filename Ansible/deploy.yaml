@@ -3,9 +3,9 @@
  roles: 
   -role: elastic.elasticsearch
  vars:  
-	es_config:
-		node.name: “{{  node_name }}”
-		cluster.name: “{{ cluster_name }}”
-		network.host= 0.0.0.0
-		discovery.seed_hosts: “{{  seed_hosts }}”
-		clister.initial_master_nodes: “{{ initial_master_nodes }}”
+    es_config:
+	node.name: “{{  node_name }}”
+	cluster.name: “{{ cluster_name }}”
+	network.host= 0.0.0.0
+	discovery.seed_hosts: “{{  seed_hosts }}”
+	clister.initial_master_nodes: “{{ initial_master_nodes }}”
