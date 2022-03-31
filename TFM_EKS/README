@@ -3,18 +3,20 @@
 1. On my EC2 Linux machine, Download terraform from Hashicorp 
  > git clone https://github.com/hashicorp/terraform-provider-aws
 
-2. Go to terraform-provider-aws/examples/eks-getting-started directory
+2. Terraform needs to interact with AWS, for that we need awscli to be installed on the same machine. This is one of the pre-requisite.
 
-3. Run terraform init
+3. Go to terraform-provider-aws/examples/eks-getting-started directory
+
+4. Run terraform init
  > terraform init
 
-4. Run terraform plan, this will show us how many services needs to be provisioned. 
+5. Run terraform plan, this will show us how many services needs to be provisioned. 
  > terraform plan
  
-5. If we are good with the number of services needs to be provisioned, then we can apply
+6. If we are good with the number of services needs to be provisioned, then we can apply
  > terraform apply 
  
-6. Terraform apply takes time depends on the number of services we are going to provision.
+7. Terraform apply takes time depends on the number of services we are going to provision.
 
-7. Once it provisioned all services, we can check state list to see what and all it provisioned.
+8. Once it provisioned all services, we can check state list to see what and all it provisioned.
  > terraform state list
